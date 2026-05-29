@@ -731,20 +731,83 @@ section.tight { padding: 80px 0; }
 
 /* ─── CTA ────────────────────────────────────────────────────── */
 .cta-section {
-  padding: 140px 28px;
-  text-align: center;
+  padding: 120px 28px;
   background: var(--bg);
   position: relative; overflow: hidden;
 }
 .cta-section::before {
   content: ""; position: absolute; inset: 0;
-  background: radial-gradient(700px 400px at 50% 0%, var(--accent-soft), transparent 65%);
+  background: radial-gradient(900px 500px at 50% 0%, var(--accent-soft), transparent 65%);
   pointer-events: none;
 }
 .cta-section > * { position: relative; z-index: 1; }
-.cta-section .eyebrow { display: inline-block; margin-bottom: 20px; }
-.cta-section h2 { max-width: 760px; margin: 0 auto 22px; }
-.cta-section p { color: var(--ink-2); font-size: 19px; max-width: 480px; margin: 0 auto 40px; line-height: 1.5; letter-spacing: -0.01em; }
+
+/* ─── CTA 2-COL LAYOUT ───────────────────────────────────────── */
+.cta-inner {
+  max-width: var(--maxw); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: start;
+}
+.cta-left .eyebrow { display: inline-block; margin-bottom: 20px; }
+.cta-left h2 { margin-bottom: 20px; }
+.cta-left p { color: var(--ink-2); font-size: 18px; line-height: 1.6; letter-spacing: -0.01em; }
+
+/* ─── FORM ───────────────────────────────────────────────────── */
+.demo-form {
+  background: var(--bg-soft);
+  border-radius: var(--r-lg);
+  padding: 36px;
+  border: 1px solid var(--hairline);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.form-field:last-of-type { margin-bottom: 20px; }
+.form-label {
+  font-size: 13px; font-weight: 500; color: var(--ink);
+  letter-spacing: -0.005em;
+}
+.form-input {
+  width: 100%; height: 44px; padding: 0 14px;
+  border-radius: var(--r-sm);
+  border: 1px solid rgba(11,27,43,.14);
+  background: var(--bg);
+  font-family: inherit; font-size: 15px;
+  color: var(--ink); letter-spacing: -0.005em;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  outline: none;
+}
+.form-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.form-input::placeholder { color: var(--muted-2); }
+textarea.form-input {
+  height: 100px; padding: 12px 14px;
+  resize: none; line-height: 1.5;
+}
+.form-submit { width: 100%; justify-content: center; }
+.form-success {
+  display: none; text-align: center;
+  padding: 40px 20px;
+}
+.form-success .tick {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--green-soft); color: var(--green);
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+.form-success h3 { font-size: 20px; margin-bottom: 8px; }
+.form-success p { font-size: 15px; color: var(--muted); }
+.form-error {
+  display: none; margin-top: 12px;
+  font-size: 13px; color: oklch(0.5 0.18 25);
+  text-align: center;
+}
+
+@media (max-width: 860px) {
+  .cta-inner { grid-template-columns: 1fr; gap: 48px; }
+  .form-row { grid-template-columns: 1fr; }
+}
 .cta-pills {
   display: flex; justify-content: center; align-items: center;
   gap: 24px; flex-wrap: wrap;
@@ -1180,15 +1243,62 @@ footer { padding: 64px 0 36px; border-top: 1px solid var(--hairline); }
 
 <!-- ══════════════════════════════════════════ CTA -->
 <section class="cta-section" id="cta">
-  <span class="eyebrow">Book a demo</span>
-  <h2>Want to hear how it would answer your calls?</h2>
-  <p>Book a 15-minute call. We'll show you GetRealtr handling a real buyer, seller, and showing inquiry — live. You'll know by the end of the call if it's right for your team.</p>
-  <a class="btn btn-primary" href="mailto:hello@getrealtr.com?subject=Demo Request" style="height:56px; padding: 0 34px; font-size: 17px;">
-    Book a demo
-    <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-    </svg>
-  </a>
+  <div class="cta-inner">
+
+    <!-- Left: copy -->
+    <div class="cta-left">
+      <span class="eyebrow">Book a demo</span>
+      <h2>Want to hear how it would answer your calls?</h2>
+      <p>Leave your details and we'll be in touch within 24 hours to set up a 15-minute call. We'll show you GetRealtr handling a real buyer, seller, and showing inquiry — live.</p>
+    </div>
+
+    <!-- Right: form -->
+    <div class="demo-form" id="demoForm">
+      <form id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label" for="firstName">First name</label>
+            <input class="form-input" type="text" id="firstName" name="firstName" placeholder="Jane" required />
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="lastName">Last name</label>
+            <input class="form-input" type="text" id="lastName" name="lastName" placeholder="Smith" required />
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="email">Email address</label>
+          <input class="form-input" type="email" id="email" name="email" placeholder="jane@yourbrokerage.com" required />
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="brokerage">Brokerage / team name</label>
+          <input class="form-input" type="text" id="brokerage" name="brokerage" placeholder="Your Brokerage" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="message">Anything you'd like us to know? <span style="color:var(--muted-2);font-weight:400;">(optional)</span></label>
+          <textarea class="form-input" id="message" name="message" placeholder="e.g. I'm a solo agent handling around 20 calls a week..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">
+          Request a demo
+          <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
+        <p class="form-error" id="formError">Something went wrong — please try again or email us at hello@getrealtr.com</p>
+      </form>
+
+      <!-- Success state -->
+      <div class="form-success" id="formSuccess">
+        <div class="tick">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h3>You're all set.</h3>
+        <p>We'll be in touch within 24 hours to arrange your demo.</p>
+      </div>
+    </div>
+
+  </div>
 </section>
 
 
@@ -1408,6 +1518,44 @@ if (toggle && menu) {
     step();
   }
 })();
+
+/* ── Demo form submission ── */
+const contactForm = document.getElementById('contactForm');
+const formSuccess = document.getElementById('formSuccess');
+const formError   = document.getElementById('formError');
+
+if (contactForm) {
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = contactForm.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    formError.style.display = 'none';
+
+    const data = {
+      firstName: document.getElementById('firstName').value.trim(),
+      lastName:  document.getElementById('lastName').value.trim(),
+      email:     document.getElementById('email').value.trim(),
+      brokerage: document.getElementById('brokerage').value.trim(),
+      message:   document.getElementById('message').value.trim(),
+    };
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error();
+      contactForm.style.display = 'none';
+      formSuccess.style.display = 'block';
+    } catch {
+      formError.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Request a demo';
+    }
+  });
+}
 </script>
 </body>
 </html>
