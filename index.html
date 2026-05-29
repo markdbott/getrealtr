@@ -803,6 +803,11 @@ textarea.form-input {
   font-size: 13px; color: oklch(0.5 0.18 25);
   text-align: center;
 }
+.field-hint {
+  display: none;
+  font-size: 12.5px; color: oklch(0.5 0.18 25);
+  letter-spacing: -0.005em; margin-top: 4px;
+}
 
 @media (max-width: 860px) {
   .cta-inner { grid-template-columns: 1fr; gap: 48px; }
@@ -1524,18 +1529,66 @@ const contactForm = document.getElementById('contactForm');
 const formSuccess = document.getElementById('formSuccess');
 const formError   = document.getElementById('formError');
 
+function isValidEmail(val) {
+  /* Must have exactly one @, no consecutive dots, valid TLD */
+  return /^[^\s@]+@[^\s@][^\s@]*\.[^\s@]{2,}$/.test(val) && !val.includes('..');
+}
+
+function setFieldError(id, msg) {
+  const input = document.getElementById(id);
+  let hint = input.parentElement.querySelector('.field-hint');
+  if (!hint) {
+    hint = document.createElement('span');
+    hint.className = 'field-hint';
+    input.parentElement.appendChild(hint);
+  }
+  if (msg) {
+    hint.textContent = msg;
+    hint.style.display = 'block';
+    input.style.borderColor = 'oklch(0.55 0.18 25)';
+    input.style.boxShadow = '0 0 0 3px oklch(0.95 0.05 25)';
+  } else {
+    hint.style.display = 'none';
+    input.style.borderColor = '';
+    input.style.boxShadow = '';
+  }
+}
+
 if (contactForm) {
+  /* Clear field error on input */
+  document.getElementById('email').addEventListener('input', () => setFieldError('email', ''));
+  document.getElementById('firstName').addEventListener('input', () => setFieldError('firstName', ''));
+
   contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    /* Client-side validation */
+    const firstName = document.getElementById('firstName').value.trim();
+    const email     = document.getElementById('email').value.trim();
+    let valid = true;
+
+    if (!firstName) {
+      setFieldError('firstName', 'Please enter your first name.');
+      valid = false;
+    }
+    if (!email) {
+      setFieldError('email', 'Please enter your email address.');
+      valid = false;
+    } else if (!isValidEmail(email)) {
+      setFieldError('email', 'That doesn\'t look like a valid email address — please check and try again.');
+      valid = false;
+    }
+    if (!valid) return;
+
     const btn = contactForm.querySelector('button[type="submit"]');
     btn.disabled = true;
     btn.textContent = 'Sending…';
     formError.style.display = 'none';
 
     const data = {
-      firstName: document.getElementById('firstName').value.trim(),
+      firstName,
       lastName:  document.getElementById('lastName').value.trim(),
-      email:     document.getElementById('email').value.trim(),
+      email,
       brokerage: document.getElementById('brokerage').value.trim(),
       message:   document.getElementById('message').value.trim(),
     };
